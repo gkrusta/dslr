@@ -7,6 +7,30 @@ class DataAnalysis:
         self.data_dict = []
         self.num_data = []
 
+    def count(self, col_num):
+        len(col_num)
+    
+    def mean(self, col_num):
+        pass
+    
+    def min(self, col_num):
+        min_num = col_num[0]
+        for i in range(len(col_num)):
+            if col_num[i] < min_num:
+                min_num = col_num[i]
+    
+    def max(self, col_num):
+        max_num = col_num[0]
+        for i in range(len(col_num)):
+            if col_num[i] > max_num:
+                max_num = col_num[i]
+    
+    def std(self, col_num):
+        pass
+    
+    def quartile(self, col_num):
+        pass
+
     def read_file(self, dataset):
         try:
             self.data_dict = pd.read_csv(dataset, index_col="Index")
