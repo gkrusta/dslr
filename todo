@@ -1,0 +1,6 @@
+1. hay valores vacios en archivo de training.
+hay que pasar por todas la columnas y si falta algun valor poner el medio de los demas
+
+quitar:
+First Name, Last Name, Birthday, and Best Hand
+Defense Against the Dark Arts
