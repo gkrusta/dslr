@@ -6,20 +6,34 @@ class Logisticregression():
     def __init__(self):
         self.lr = 0.001
         self.iterations = 1000
-        self.weights = None
-        self.bias = None
+        self.weights = 0
+        self.bias = 0
 
     def sigmoid(self, x):
         return 1 / (1 + np.exp(-x))
 
-    all_data = pd.read_csv('datasets/dataset_train.csv')
-    data = all_data.drop(columns=['First Name', 'Last Name', 'Birthday', 'Best Hand'])
-    
-    print(data.head())
+    def compute_cost(self, y_label, y_predicted):
+        epsilon = 1e-9
 
 
-def main()
+    def parse_arguments():
+        all_data = pd.read_csv('datasets/dataset_train.csv')
+        data = all_data.drop(columns=['First Name', 'Last Name', 'Birthday', 'Best Hand', 'Defense Against the Dark Arts'])
+        houses = ['Gryffindor', 'Hufflepuff', 'Ravenclaw', 'Slytherin']
+        labels = {}
 
+        for house in houses:
+            labels[house] = (data['Hogwarts House'] == house).astype(int)
+        
+        for house, label in labels.items():
+            data[f'{house}_label'] = label
+
+        print(data.head())
+
+
+def main():
+    lr = Logisticregression()
+    data = Logisticregression.parse_arguments()
 
 if __name__ == "__main__":
     main()
