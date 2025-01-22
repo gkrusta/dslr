@@ -12,10 +12,12 @@ class DataAnalysis:
     
     def mean(self, col_num):
         total = 0.0
+        num_len = 0
         for num in col_num:
             if (num == num): #evita los nan
                 total += num
-        return (total / len(col_num))
+                num_len += 1
+        return (total / num_len)
     
     def min(self, col_num):
         min_num = col_num[0]
@@ -33,17 +35,20 @@ class DataAnalysis:
     
     def std(self, col_num):
         mean = self.mean(col_num)
-        self.nan_values(col_num, mean)
         std = 0.0
+        num_len = 0
         for num in col_num:
-            if (num != num): #cambia los nan
-                num = mean
-            std += (num - mean) ** 2
-        return ((std / len(col_num)) ** 0.5)
+            if (num == num): #cambia los nan
+                num_len += 1
+                std += (num - mean) ** 2
+        return ((std / num_len) ** 0.5)
     
+    def quicksort(col_num):
+        pass
+
     def quantile(self, col_num, percentage):
         
-        #ordenar los numeros de menor a mayor
+        #ordenar los numeros de menor a mayor con quicksort
         sorted_num = col_num
 
         if (percentage == 25):
@@ -75,13 +80,12 @@ class DataAnalysis:
             self.nan_values(self.num_data.iloc[:,i].to_list(), mean)
     
     def print_calc(self):
-        pass
-        #for i in range(len(self.num_data.columns)):
+        for i in range(len(self.num_data.columns)):
             #print(self.mean(self.num_data.iloc[:,i].to_list()))
             #print(self.num_data.iloc[:,i].mean()) #prueba que salga el mismo mean
             
-            #print(self.std(self.num_data.iloc[:,i].to_list()))
-            #print(self.num_data.iloc[:,i].std()) #prueba que salga el mismo std
+            print(self.std(self.num_data.iloc[:,i].to_list()))
+            print(self.num_data.iloc[:,i].std()) #prueba que salga el mismo std
             
             #print(self.quantile(self.num_data.iloc[:,i].to_list(), 25))
             #print(self.quantile(self.num_data.iloc[:,i].to_list(), 50))
