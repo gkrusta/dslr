@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from utils import replace_nan_values
+from toolkit import DataParser
 
 class Logisticregression():
     def __init__(self):
@@ -16,15 +16,15 @@ class Logisticregression():
 
     def compute_cost(self, y_label, y_predicted):
         epsilon = 1e-9
-        
+        pass
 
 
     def parse_arguments(self):
-        all_data = pd.read_csv('datasets/dataset_train.csv')
-        columns_to_drop = ['First Name', 'Last Name', 'Birthday', 'Best Hand', 'Defense Against the Dark Arts'])
+        all_data = pd.read_csv('datasets/dataset_train.csv', index_col="Index")
+        columns_to_drop = ['First Name', 'Last Name', 'Birthday', 'Best Hand', 'Defense Against the Dark Arts']
+        data =  DataParser.replace_nan_values(all_data, columns_to_drop)
         houses = ['Gryffindor', 'Hufflepuff', 'Ravenclaw', 'Slytherin']
         labels = {}
-        data = replace_nan_values(data, columns_to_drop)
         for house in houses:
             labels[house] = (data['Hogwarts House'] == house).astype(int)
         
@@ -32,12 +32,13 @@ class Logisticregression():
             data[f'{house}_label'] = label
 
         print(data.head())
+        return data
 
 
 
 def main():
     lr = Logisticregression()
-    lr.data = Logisticregression.parse_arguments()
+    lr.data = lr.parse_arguments()
 
 
 
