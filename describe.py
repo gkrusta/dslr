@@ -1,6 +1,6 @@
 import sys
 import pandas as pd
-from toolkit import replace_nan_values
+from toolkit import DataParser
 
 class DataAnalysis:
 
@@ -61,25 +61,24 @@ class DataAnalysis:
 
     def read_file(self, dataset):
         try:
-            self.data_dict = pd.read_csv(dataset, index_col="Index")
+            self.data_dict = DataParser.open_file(dataset)
             columns_name = []
             for name in self.data_dict.columns.values:
                 if isinstance(self.data_dict[name].iloc[0], int) or isinstance(self.data_dict[name].iloc[0], float):
                     columns_name.append(name)
+
             self.num_data = self.data_dict.loc[:, columns_name]
         except:
             print("Coludn't read the dataset")
             sys.exit(1)
-        
-        for i in range(len(self.num_data.columns)):
-            mean = self.mean(self.num_data.iloc[:,i].to_list())
-            self.nan_values(self.num_data.iloc[:,i].to_list(), mean)
+        self.num_data = DataParser.replace_nan_values(self.num_data)
+
     
     def print_calc(self):
         pass
-        #for i in range(len(self.num_data.columns)):
-            #print(self.mean(self.num_data.iloc[:,i].to_list()))
-            #print(self.num_data.iloc[:,i].mean()) #prueba que salga el mismo mean
+        for i in range(len(self.num_data.columns)):
+            print(self.mean(self.num_data.iloc[:,i].to_list()))
+            print(self.num_data.iloc[:,i].mean()) #prueba que salga el mismo mean
             
             #print(self.std(self.num_data.iloc[:,i].to_list()))
             #print(self.num_data.iloc[:,i].std()) #prueba que salga el mismo std
