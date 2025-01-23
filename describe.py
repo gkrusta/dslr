@@ -43,20 +43,24 @@ class DataAnalysis:
                 std += (num - mean) ** 2
         return ((std / num_len) ** 0.5)
     
-    def quicksort(col_num):
-        pass
+    def quicksort(self, col_num):
+        if len(col_num) <= 1:
+            return col_num
+        else:
+            pivot = col_num[0]
+            lower = [x for x in col_num[1:] if x <= pivot]
+            higher = [x for x in col_num[1:] if x > pivot]
+            return self.quicksort(lower) + [pivot] + self.quicksort(higher)
 
     def quantile(self, col_num, percentage):
-        
-        #ordenar los numeros de menor a mayor con quicksort
-        sorted_num = col_num
+        sorted_num = self.quicksort(col_num)
 
         if (percentage == 25):
-            return float(sorted_num[int(len / 4)])
+            return float(sorted_num[int(len(col_num) / 4)])
         elif (percentage == 50):
-            return float(sorted_num[int(2 * len / 4)])
+            return float(sorted_num[int(2 * len(col_num) / 4)])
         elif (percentage == 75):
-            return float(sorted_num[int(3 * len / 4)])
+            return float(sorted_num[int(3 * len(col_num) / 4)])
 
     def nan_values(self, col_num, mean):
         for num in col_num:
@@ -80,12 +84,13 @@ class DataAnalysis:
             self.nan_values(self.num_data.iloc[:,i].to_list(), mean)
     
     def print_calc(self):
-        for i in range(len(self.num_data.columns)):
+        pass
+        #for i in range(len(self.num_data.columns)):
             #print(self.mean(self.num_data.iloc[:,i].to_list()))
             #print(self.num_data.iloc[:,i].mean()) #prueba que salga el mismo mean
             
-            print(self.std(self.num_data.iloc[:,i].to_list()))
-            print(self.num_data.iloc[:,i].std()) #prueba que salga el mismo std
+            #print(self.std(self.num_data.iloc[:,i].to_list()))
+            #print(self.num_data.iloc[:,i].std()) #prueba que salga el mismo std
             
             #print(self.quantile(self.num_data.iloc[:,i].to_list(), 25))
             #print(self.quantile(self.num_data.iloc[:,i].to_list(), 50))
