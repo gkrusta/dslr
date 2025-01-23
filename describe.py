@@ -13,10 +13,12 @@ class DataAnalysis:
     
     def mean(self, col_num):
         total = 0.0
+        num_len = 0
         for num in col_num:
             if (num == num): #evita los nan
                 total += num
-        return (total / len(col_num))
+                num_len += 1
+        return (total / num_len)
     
     def min(self, col_num):
         min_num = col_num[0]
@@ -34,25 +36,32 @@ class DataAnalysis:
     
     def std(self, col_num):
         mean = self.mean(col_num)
-        self.nan_values(col_num, mean)
         std = 0.0
+        num_len = 0
         for num in col_num:
-            if (num != num): #cambia los nan
-                num = mean
-            std += (num - mean) ** 2
-        return ((std / len(col_num)) ** 0.5)
+            if (num == num): #cambia los nan
+                num_len += 1
+                std += (num - mean) ** 2
+        return ((std / num_len) ** 0.5)
     
+    def quicksort(self, col_num):
+        if len(col_num) <= 1:
+            return col_num
+        else:
+            pivot = col_num[0]
+            lower = [x for x in col_num[1:] if x <= pivot]
+            higher = [x for x in col_num[1:] if x > pivot]
+            return self.quicksort(lower) + [pivot] + self.quicksort(higher)
+
     def quantile(self, col_num, percentage):
-        
-        #ordenar los numeros de menor a mayor
-        sorted_num = col_num
+        sorted_num = self.quicksort(col_num)
 
         if (percentage == 25):
-            return float(sorted_num[int(len / 4)])
+            return float(sorted_num[int(len(col_num) / 4)])
         elif (percentage == 50):
-            return float(sorted_num[int(2 * len / 4)])
+            return float(sorted_num[int(2 * len(col_num) / 4)])
         elif (percentage == 75):
-            return float(sorted_num[int(3 * len / 4)])
+            return float(sorted_num[int(3 * len(col_num) / 4)])
 
     def nan_values(self, col_num, mean):
         for num in col_num:
