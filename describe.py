@@ -1,5 +1,4 @@
 import sys
-import pandas as pd
 from toolkit import DataParser
 
 class DataAnalysis:

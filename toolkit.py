@@ -10,6 +10,7 @@ class DataParser:
             print()
             exit(1)
 
+
     @staticmethod
     def replace_nan_values(data):
 
