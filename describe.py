@@ -66,7 +66,7 @@ class DataAnalysis:
         try:
             self.data_dict = DataParser.open_file(dataset)
             columns_name = []
-            for name in self.data_dict.columns.values:
+            for name in self.data_dict.columns:
                 if isinstance(self.data_dict[name].iloc[0], int) or isinstance(self.data_dict[name].iloc[0], float):
                     columns_name.append(name)
 
@@ -78,22 +78,27 @@ class DataAnalysis:
 
     
     def print_calc(self):
-        math_func = ["Count", "Mean", "Std", "Min", "25%", "50%", "75%", "Max", " ", " ", " ", " ", " "]
-        for i in range(len(self.num_data.columns)):
-            print(self.num_data.columns.values[i], end=' ')
-        for i in range(len(self.num_data.columns)):
-            print('{0} {1:.6f} {2:.6f} {3:.6f} {4:.6f} {5:.6f} {6:.6f} {7:.6f} {8:.6f}'.format(
-                math_func[i],
-                self.count(self.num_data.iloc[:,i].to_list()),
-                self.mean(self.num_data.iloc[:,i].to_list()),
-                self.std(self.num_data.iloc[:,i].to_list()),
-                self.min(self.num_data.iloc[:,i].to_list()),
-                self.quantile(self.num_data.iloc[:,i].to_list(), 25),
-                self.quantile(self.num_data.iloc[:,i].to_list(), 50),
-                self.quantile(self.num_data.iloc[:,i].to_list(), 75),
-                self.max(self.num_data.iloc[:,i].to_list())
-            ))
+        math_func = {
+            "Count": self.count,
+            "Mean": self.mean,
+            "Std": self.std,
+            "Min": self.min,
+            "25%": lambda col: self.quantile(col, 25),
+            "50%": lambda col: self.quantile(col, 50),
+            "75%": lambda col: self.quantile(col, 75),
+            "Max": self.max
+        }
 
+        print(f"{'':<8}", end=' ')
+        for col in self.num_data.columns:
+            print(f"{col:>5}", end=' ')
+        print()
+
+        for func_name, func in math_func.items():
+            print(f"{func_name:<7}", end=' ')
+            for col in self.num_data.columns:
+                print(f"{func(self.num_data[col].to_list()):>13.6f}", end=' ')
+            print()
 
 def main():
     if (len(sys.argv) < 2):
