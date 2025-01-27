@@ -13,12 +13,9 @@ class DataAnalysis:
     
     def mean(self, col_num):
         total = 0.0
-        num_len = 0
         for num in col_num:
-            if (num == num): #evita los nan
-                total += num
-                num_len += 1
-        return (total / num_len)
+            total += num
+        return (total / len(col_num))
     
     def min(self, col_num):
         min_num = col_num[0]
@@ -37,12 +34,9 @@ class DataAnalysis:
     def std(self, col_num):
         mean = self.mean(col_num)
         std = 0.0
-        num_len = 0
         for num in col_num:
-            if (num == num): #cambia los nan
-                num_len += 1
-                std += (num - mean) ** 2
-        return ((std / num_len) ** 0.5)
+            std += (num - mean) ** 2
+        return ((std / len(col_num)) ** 0.5)
     
     def quicksort(self, col_num):
         if len(col_num) <= 1:
@@ -72,7 +66,7 @@ class DataAnalysis:
         try:
             self.data_dict = DataParser.open_file(dataset)
             columns_name = []
-            for name in self.data_dict.columns.values:
+            for name in self.data_dict.columns:
                 if isinstance(self.data_dict[name].iloc[0], int) or isinstance(self.data_dict[name].iloc[0], float):
                     columns_name.append(name)
 
@@ -84,19 +78,27 @@ class DataAnalysis:
 
     
     def print_calc(self):
-        pass
-        for i in range(len(self.num_data.columns)):
-            print(self.mean(self.num_data.iloc[:,i].to_list()))
-            print(self.num_data.iloc[:,i].mean()) #prueba que salga el mismo mean
-            
-            #print(self.std(self.num_data.iloc[:,i].to_list()))
-            #print(self.num_data.iloc[:,i].std()) #prueba que salga el mismo std
-            
-            #print(self.quantile(self.num_data.iloc[:,i].to_list(), 25))
-            #print(self.quantile(self.num_data.iloc[:,i].to_list(), 50))
-            #print(self.quantile(self.num_data.iloc[:,i].to_list(), 75))
-            #print(self.num_data.iloc[:,i].quantile([.25, .5, .75])) #prueba que salga los mismos quantiles
+        math_func = {
+            "Count": self.count,
+            "Mean": self.mean,
+            "Std": self.std,
+            "Min": self.min,
+            "25%": lambda col: self.quantile(col, 25),
+            "50%": lambda col: self.quantile(col, 50),
+            "75%": lambda col: self.quantile(col, 75),
+            "Max": self.max
+        }
 
+        print(f"{'':<8}", end=' ')
+        for col in self.num_data.columns:
+            print(f"{col:>5}", end=' ')
+        print()
+
+        for func_name, func in math_func.items():
+            print(f"{func_name:<7}", end=' ')
+            for col in self.num_data.columns:
+                print(f"{func(self.num_data[col].to_list()):>13.6f}", end=' ')
+            print()
 
 def main():
     if (len(sys.argv) < 2):
