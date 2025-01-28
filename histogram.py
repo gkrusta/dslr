@@ -14,7 +14,7 @@ class Histogram():
         try:
             plt.xlabel("Values", fontsize=14, fontweight="bold", labelpad=20)
             plt.ylabel('Frequency', fontsize=14, fontweight="bold", labelpad=20)
-            plt.legend(loc="upper right", fontsize=10)
+            plt.legend(loc="upper right", fontsize=10, title='Hogwarts House')
             plt.xticks(fontsize=14)
             plt.yticks(fontsize=14)
             plt.title(feature, fontsize=20, fontweight="bold", pad=20)
@@ -37,13 +37,16 @@ class Histogram():
         
         features = self.data.drop(columns=['Hogwarts House'] ).columns
         print("features ", features)
-
+        rows = 3
+        cols = 5
+        fig, axs = plt.subplot(rows, cols)
         for feature in features:
             plt.figure(figsize=(10, 8))
             for house in houses:
-                house_data = self.data[house_col] == house
-                plt.hist(house_data[feature], bins=20, alpha = 0.7)
-            self.visulize(feature) 
+                house_data = self.data[self.data[house_col] == house]
+                print("house_data", house_data)
+                plt.hist(house_data[feature], bins=20, alpha = 0.7, label=house)
+            self.visualize(feature) 
 
 
 def main():
