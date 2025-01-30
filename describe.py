@@ -13,8 +13,7 @@ class DataAnalysis:
     def mean(self, col_num):
         total = 0.0
         for num in col_num:
-            if (num == num): #evita los nan
-                total += num
+            total += num
         return (total / len(col_num))
     
     def min(self, col_num):
@@ -33,25 +32,29 @@ class DataAnalysis:
     
     def std(self, col_num):
         mean = self.mean(col_num)
-        self.nan_values(col_num, mean)
         std = 0.0
         for num in col_num:
-            if (num != num): #cambia los nan
-                num = mean
             std += (num - mean) ** 2
         return ((std / len(col_num)) ** 0.5)
     
+    def quicksort(self, col_num):
+        if len(col_num) <= 1:
+            return col_num
+        else:
+            pivot = col_num[0]
+            lower = [x for x in col_num[1:] if x <= pivot]
+            higher = [x for x in col_num[1:] if x > pivot]
+            return self.quicksort(lower) + [pivot] + self.quicksort(higher)
+
     def quantile(self, col_num, percentage):
-        
-        #ordenar los numeros de menor a mayor
-        sorted_num = col_num
+        sorted_num = self.quicksort(col_num)
 
         if (percentage == 25):
-            return float(sorted_num[int(len / 4)])
+            return float(sorted_num[int(len(col_num) / 4)])
         elif (percentage == 50):
-            return float(sorted_num[int(2 * len / 4)])
+            return float(sorted_num[int(2 * len(col_num) / 4)])
         elif (percentage == 75):
-            return float(sorted_num[int(3 * len / 4)])
+            return float(sorted_num[int(3 * len(col_num) / 4)])
 
     def nan_values(self, col_num, mean):
         for num in col_num:
@@ -62,7 +65,7 @@ class DataAnalysis:
         try:
             self.data_dict = DataParser.open_file(dataset)
             columns_name = []
-            for name in self.data_dict.columns.values:
+            for name in self.data_dict.columns:
                 if isinstance(self.data_dict[name].iloc[0], int) or isinstance(self.data_dict[name].iloc[0], float):
                     columns_name.append(name)
 
@@ -74,19 +77,27 @@ class DataAnalysis:
 
     
     def print_calc(self):
-        pass
-        for i in range(len(self.num_data.columns)):
-            print(self.mean(self.num_data.iloc[:,i].to_list()))
-            print(self.num_data.iloc[:,i].mean()) #prueba que salga el mismo mean
-            
-            #print(self.std(self.num_data.iloc[:,i].to_list()))
-            #print(self.num_data.iloc[:,i].std()) #prueba que salga el mismo std
-            
-            #print(self.quantile(self.num_data.iloc[:,i].to_list(), 25))
-            #print(self.quantile(self.num_data.iloc[:,i].to_list(), 50))
-            #print(self.quantile(self.num_data.iloc[:,i].to_list(), 75))
-            #print(self.num_data.iloc[:,i].quantile([.25, .5, .75])) #prueba que salga los mismos quantiles
+        math_func = {
+            "Count": self.count,
+            "Mean": self.mean,
+            "Std": self.std,
+            "Min": self.min,
+            "25%": lambda col: self.quantile(col, 25),
+            "50%": lambda col: self.quantile(col, 50),
+            "75%": lambda col: self.quantile(col, 75),
+            "Max": self.max
+        }
 
+        print(f"{'':<8}", end=' ')
+        for col in self.num_data.columns:
+            print(f"{col:>5}", end=' ')
+        print()
+
+        for func_name, func in math_func.items():
+            print(f"{func_name:<7}", end=' ')
+            for col in self.num_data.columns:
+                print(f"{func(self.num_data[col].to_list()):>13.6f}", end=' ')
+            print()
 
 def main():
     if (len(sys.argv) < 2):
