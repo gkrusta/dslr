@@ -18,5 +18,5 @@ class DataParser:
             if data[col].isnull().any():
                 non_nan_values = data[col][data[col].notnull()]
                 column_mean = sum(non_nan_values) / len(non_nan_values)
-                data[col].fillna(column_mean, inplace=True)
+                data[col] = data[col].fillna(column_mean)
         return data

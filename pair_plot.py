@@ -12,11 +12,9 @@ class PairPlot():
         all_data = DataParser.open_file(infile)
         columns_to_drop = ['First Name', 'Last Name', 'Birthday', 'Best Hand']
         data = all_data.drop(columns=columns_to_drop, errors='ignore')
+        data = data.rename(columns={'Defense Against the Dark Arts': 'DADA'})
         self.data =  DataParser.replace_nan_values(data)
-        houses = self.data[house_col].unique()        
-        features = self.data.drop(columns=['Hogwarts House']).columns
-        rows, cols = 3, 5
-        df = sns.pairplot(features, )
+        sns.pairplot(self.data, hue=house_col)
         plt.show()
         plt.close()
 
@@ -28,4 +26,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
