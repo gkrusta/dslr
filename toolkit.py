@@ -13,10 +13,10 @@ class DataParser:
 
     @staticmethod
     def replace_nan_values(data):
-
         for col in data.columns:
             if data[col].isnull().any():
                 non_nan_values = data[col][data[col].notnull()]
-                column_mean = sum(non_nan_values) / len(non_nan_values)
-                data[col] = data[col].fillna(column_mean)
+                if not(non_nan_values.empty):
+                    column_mean = sum(non_nan_values) / len(non_nan_values)
+                    data[col] = data[col].fillna(column_mean)
         return data

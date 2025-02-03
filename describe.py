@@ -37,6 +37,16 @@ class DataAnalysis:
             std += (num - mean) ** 2
         return ((std / len(col_num)) ** 0.5)
     
+    def range(self, col_num):
+        return (self.max(col_num) - self.min(col_num))
+
+    def nan_count(seld, col_num):
+        count = 0
+        for num in col_num:
+            if num != num:
+                count +=1
+        return count
+    
     def quicksort(self, col_num):
         if len(col_num) <= 1:
             return col_num
@@ -56,11 +66,6 @@ class DataAnalysis:
         elif (percentage == 75):
             return float(sorted_num[int(3 * len(col_num) / 4)])
 
-    def nan_values(self, col_num, mean):
-        for num in col_num:
-            if num != num:
-                num = mean
-
     def read_file(self, dataset):
         try:
             self.data_dict = DataParser.open_file(dataset)
@@ -70,6 +75,7 @@ class DataAnalysis:
                     columns_name.append(name)
 
             self.num_data = self.data_dict.loc[:, columns_name]
+            self.data_dict = self.num_data
         except:
             print("Coludn't read the dataset")
             sys.exit(1)
@@ -85,7 +91,9 @@ class DataAnalysis:
             "25%": lambda col: self.quantile(col, 25),
             "50%": lambda col: self.quantile(col, 50),
             "75%": lambda col: self.quantile(col, 75),
-            "Max": self.max
+            "Max": self.max,
+            "Range": self.range,
+            "Nan values": self.nan_count
         }
 
         print(f"{'':<8}", end=' ')
@@ -95,8 +103,12 @@ class DataAnalysis:
 
         for func_name, func in math_func.items():
             print(f"{func_name:<7}", end=' ')
-            for col in self.num_data.columns:
-                print(f"{func(self.num_data[col].to_list()):>13.6f}", end=' ')
+            if (func_name == "Nan values"):
+                for col in self.data_dict.columns:
+                    print(f"{func(self.data_dict[col].to_list()):>13.6f}", end=' ')
+            else:
+                for col in self.num_data.columns:
+                    print(f"{func(self.num_data[col].to_list()):>13.6f}", end=' ')
             print()
 
 def main():
