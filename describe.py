@@ -58,7 +58,6 @@ class DataAnalysis:
 
     def quantile(self, col_num, percentage):
         sorted_num = self.quicksort(col_num)
-
         if (percentage == 25):
             return float(sorted_num[int(len(col_num) / 4)])
         elif (percentage == 50):
@@ -75,12 +74,11 @@ class DataAnalysis:
                     columns_name.append(name)
 
             self.num_data = self.data_dict.loc[:, columns_name]
-            self.data_dict = self.num_data
+            self.data_dict = self.num_data.copy()
         except:
             print("Coludn't read the dataset")
             sys.exit(1)
         self.num_data = DataParser.replace_nan_values(self.num_data)
-
     
     def print_calc(self):
         math_func = {
