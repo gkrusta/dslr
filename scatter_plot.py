@@ -8,13 +8,7 @@ class ScatterPlot:
     
     def similar_features(self, dataset):
         self.data = DataParser.open_file(dataset)
-        columns_name = []
-        for name in self.data.columns:
-            if isinstance(self.data[name].iloc[0], int) or isinstance(self.data[name].iloc[0], float):
-                columns_name.append(name)
-
-        self.num_data = self.data.loc[:, columns_name]
-        self.num_data = DataParser.replace_nan_values(self.num_data)
+        self.num_data, _ = DataParser.clean_data(self.data)
 
         corr_data = self.num_data.corr()
         max_corr = 0

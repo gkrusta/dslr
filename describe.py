@@ -3,9 +3,14 @@ from toolkit import DataParser
 
 class DataAnalysis:
 
-    def __init__(self):
-        self.data_dict = []
-        self.num_data = []
+    def __init__(self, dataset):
+        try:
+            self.data_dict = DataParser.open_file(dataset)
+            self.num_data, self.nan_data = DataParser.clean_data(self.data_dict)
+            self.print_calc()
+        except Exception as e:
+            print(e)
+            exit(1)
 
     def count(self, col_num):
         return len(col_num)
@@ -64,21 +69,6 @@ class DataAnalysis:
             return float(sorted_num[int(2 * len(col_num) / 4)])
         elif (percentage == 75):
             return float(sorted_num[int(3 * len(col_num) / 4)])
-
-    def read_file(self, dataset):
-        try:
-            self.data_dict = DataParser.open_file(dataset)
-            columns_name = []
-            for name in self.data_dict.columns:
-                if isinstance(self.data_dict[name].iloc[0], int) or isinstance(self.data_dict[name].iloc[0], float):
-                    columns_name.append(name)
-
-            self.num_data = self.data_dict.loc[:, columns_name]
-            self.data_dict = self.num_data.copy()
-        except:
-            print("Coludn't read the dataset")
-            sys.exit(1)
-        self.num_data = DataParser.replace_nan_values(self.num_data)
     
     def print_calc(self):
         math_func = {
@@ -102,8 +92,8 @@ class DataAnalysis:
         for func_name, func in math_func.items():
             print(f"{func_name:<10}", end=' ')
             if (func_name == "Nan values"):
-                for col in self.data_dict.columns:
-                    print(f"{func(self.data_dict[col].to_list()):>13.6f}", end=' ')
+                for col in self.nan_data.columns:
+                    print(f"{func(self.nan_data[col].to_list()):>13.6f}", end=' ')
             else:
                 for col in self.num_data.columns:
                     print(f"{func(self.num_data[col].to_list()):>13.6f}", end=' ')
@@ -114,9 +104,7 @@ def main():
         print("Usage: python3 ./describe.py dataset_name")
         sys.exit(1)
 
-    data = DataAnalysis()
-    data.read_file(sys.argv[1])
-    data.print_calc()
+    data = DataAnalysis(sys.argv[1])
 
 if __name__ == "__main__":
     main()
