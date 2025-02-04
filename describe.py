@@ -100,7 +100,7 @@ class DataAnalysis:
         print()
 
         for func_name, func in math_func.items():
-            print(f"{func_name:<7}", end=' ')
+            print(f"{func_name:<10}", end=' ')
             if (func_name == "Nan values"):
                 for col in self.data_dict.columns:
                     print(f"{func(self.data_dict[col].to_list()):>13.6f}", end=' ')
