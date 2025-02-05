@@ -2,8 +2,15 @@ import sys
 from toolkit import DataParser
 
 class DataAnalysis:
+    '''Display information for all numerical features of a dataset.'''
 
     def __init__(self, dataset):
+        '''
+        Init the class, open the file and clean the data of non-numeric features and NaN values.
+
+        Parameters:
+        dataset (str): Path to dataset
+        '''
         try:
             self.data_dict = DataParser.open_file(dataset)
             self.num_data, self.nan_data = DataParser.clean_data(self.data_dict)
@@ -13,15 +20,42 @@ class DataAnalysis:
             exit(1)
 
     def count(self, col_num):
+        '''
+        Calculate the length of a column.
+
+        Parameters:
+        col_num (pd.Series.column): A numeric column of a dataset
+
+        Returns:
+        int: Length of the column
+        '''
         return len(col_num)
     
     def mean(self, col_num):
+        '''
+        Calculate the mean of a column.
+
+        Parameters:
+        col_num (pd.Series.column): A numeric column of a dataset
+
+        Returns:
+        float: Mean of the column
+        '''
         total = 0.0
         for num in col_num:
             total += num
         return (total / len(col_num))
     
     def min(self, col_num):
+        '''
+        Calculate the minimum value of a column.
+
+        Parameters:
+        col_num (pd.Series.column): A numeric column of a dataset
+
+        Returns:
+        float: Minimum value of the column
+        '''
         min_num = col_num[0]
         for num in col_num:
             if num < min_num:
@@ -29,6 +63,15 @@ class DataAnalysis:
         return min_num
     
     def max(self, col_num):
+        '''
+        Calculate the maximum value of a column.
+
+        Parameters:
+        col_num (pd.Series.column): A numeric column of a dataset
+
+        Returns:
+        float: Maximum value of the column
+        '''
         max_num = col_num[0]
         for num in col_num:
             if num > max_num:
@@ -36,6 +79,15 @@ class DataAnalysis:
         return max_num
     
     def std(self, col_num):
+        '''
+        Calculate the standard deviation of a column.
+
+        Parameters:
+        col_num (pd.Series.column): A numeric column of a dataset
+
+        Returns:
+        float: Standard deviation of the column
+        '''
         mean = self.mean(col_num)
         std = 0.0
         for num in col_num:
@@ -43,9 +95,27 @@ class DataAnalysis:
         return ((std / len(col_num)) ** 0.5)
     
     def range(self, col_num):
+        '''
+        Calculate the range of values in a column.
+
+        Parameters:
+        col_num (pd.Series.column): A numeric column of a dataset
+
+        Returns:
+        float: Range of values in a column
+        '''
         return (self.max(col_num) - self.min(col_num))
 
     def nan_count(seld, col_num):
+        '''
+        Calculate the number of NaN in a column.
+
+        Parameters:
+        col_num (pd.Series.column): A numeric column of a dataset
+
+        Returns:
+        float: Number of NaN in a column
+        '''
         count = 0
         for num in col_num:
             if num != num:
@@ -53,6 +123,15 @@ class DataAnalysis:
         return count
     
     def quicksort(self, col_num):
+        '''
+        Sort the values from lowest to highest of a column with quicksort algorithm.
+
+        Parameters:
+        col_num (pd.Series.column): A numeric column of a dataset
+
+        Returns:
+        pd.Series.column: The column with the numbers sorted
+        '''
         if len(col_num) <= 1:
             return col_num
         else:
@@ -62,6 +141,16 @@ class DataAnalysis:
             return self.quicksort(lower) + [pivot] + self.quicksort(higher)
 
     def quantile(self, col_num, percentage):
+        '''
+        Calculate the quantile of a column.
+
+        Parameters:
+        col_num (pd.Series.column): A numeric column of a dataset
+        percentage (int): Percentage of the quantile to be calculated
+
+        Returns:
+        float: Quantile of a column
+        '''
         sorted_num = self.quicksort(col_num)
         if (percentage == 25):
             return float(sorted_num[int(len(col_num) / 4)])
@@ -71,6 +160,9 @@ class DataAnalysis:
             return float(sorted_num[int(3 * len(col_num) / 4)])
     
     def print_calc(self):
+        '''
+        Print all the calculations of data analysis from a dataset.
+        '''
         math_func = {
             "Count": self.count,
             "Mean": self.mean,
