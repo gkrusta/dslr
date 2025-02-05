@@ -29,7 +29,7 @@ class Logisticregression():
         labels = {}
         for house in houses:
             labels[house] = (self.data['Hogwarts House'] == house).astype(int)
-        
+
         for house, label in labels.items():
             self.data[f'{house}_label'] = label
 
