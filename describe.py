@@ -2,11 +2,11 @@ import sys
 from toolkit import DataParser
 
 class DataAnalysis:
-    '''Display information for all numerical features of a dataset.'''
+    '''Displays information for all numerical features of a dataset.'''
 
     def __init__(self, dataset):
         '''
-        Init the class, open the file and clean the data of non-numeric features and NaN values.
+        Inits the class, open the file and clean the data of non-numeric features and NaN values.
 
         Parameters:
         dataset (str): Path to dataset
@@ -21,7 +21,7 @@ class DataAnalysis:
 
     def count(self, col_num):
         '''
-        Calculate the length of a column.
+        Calculates the length of a column.
 
         Parameters:
         col_num (pd.Series.column): A numeric column of a dataset
@@ -33,7 +33,7 @@ class DataAnalysis:
     
     def mean(self, col_num):
         '''
-        Calculate the mean of a column.
+        Calculates the mean of a column.
 
         Parameters:
         col_num (pd.Series.column): A numeric column of a dataset
@@ -48,7 +48,7 @@ class DataAnalysis:
     
     def min(self, col_num):
         '''
-        Calculate the minimum value of a column.
+        Calculates the minimum value of a column.
 
         Parameters:
         col_num (pd.Series.column): A numeric column of a dataset
@@ -64,7 +64,7 @@ class DataAnalysis:
     
     def max(self, col_num):
         '''
-        Calculate the maximum value of a column.
+        Calculates the maximum value of a column.
 
         Parameters:
         col_num (pd.Series.column): A numeric column of a dataset
@@ -80,7 +80,7 @@ class DataAnalysis:
     
     def std(self, col_num):
         '''
-        Calculate the standard deviation of a column.
+        Calculates the standard deviation of a column.
 
         Parameters:
         col_num (pd.Series.column): A numeric column of a dataset
@@ -96,7 +96,7 @@ class DataAnalysis:
     
     def range(self, col_num):
         '''
-        Calculate the range of values in a column.
+        Calculates the range of values in a column.
 
         Parameters:
         col_num (pd.Series.column): A numeric column of a dataset
@@ -108,7 +108,7 @@ class DataAnalysis:
 
     def nan_count(seld, col_num):
         '''
-        Calculate the number of NaN in a column.
+        Calculates the number of NaN in a column.
 
         Parameters:
         col_num (pd.Series.column): A numeric column of a dataset
@@ -124,7 +124,7 @@ class DataAnalysis:
     
     def quicksort(self, col_num):
         '''
-        Sort the values from lowest to highest of a column with quicksort algorithm.
+        Sorts the values from lowest to highest of a column with quicksort algorithm.
 
         Parameters:
         col_num (pd.Series.column): A numeric column of a dataset
@@ -142,7 +142,7 @@ class DataAnalysis:
 
     def quantile(self, col_num, percentage):
         '''
-        Calculate the quantile of a column.
+        Calculates the quantile of a column.
 
         Parameters:
         col_num (pd.Series.column): A numeric column of a dataset
@@ -161,7 +161,7 @@ class DataAnalysis:
     
     def print_calc(self):
         '''
-        Print all the calculations of data analysis from a dataset.
+        Prints all the calculations of data analysis from a dataset.
         '''
         math_func = {
             "Count": self.count,

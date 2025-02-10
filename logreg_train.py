@@ -1,3 +1,4 @@
+import sys
 import pandas as pd
 import numpy as np
 from toolkit import DataParser
@@ -20,8 +21,8 @@ class Logisticregression():
         pass
 
 
-    def parse_arguments(self):
-        all_data = DataParser.open_file('datasets/dataset_train.csv')
+    def parse_arguments(self, dataset):
+        all_data = DataParser.open_file(dataset)
         columns_to_drop = ['First Name', 'Last Name', 'Birthday', 'Best Hand', 'Defense Against the Dark Arts']
         data = all_data.drop(columns=columns_to_drop)
         self.data =  DataParser.replace_nan_values(data)
@@ -29,7 +30,7 @@ class Logisticregression():
         labels = {}
         for house in houses:
             labels[house] = (self.data['Hogwarts House'] == house).astype(int)
-        
+
         for house, label in labels.items():
             self.data[f'{house}_label'] = label
 
@@ -37,8 +38,12 @@ class Logisticregression():
 
 
 def main():
+    if (len(sys.argv) < 2):
+        print("Usage: python3 ./logreg_train.py dataset_name")
+        sys.exit(1)
+
     lr = Logisticregression()
-    lr.parse_arguments()
+    lr.parse_arguments(sys.argv[1])
 
 
 if __name__ == "__main__":

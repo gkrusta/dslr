@@ -4,7 +4,7 @@ class DataParser:
     @staticmethod
     def open_file(file_path, index_col="Index"):
         '''
-        Open a file and returns it
+        Opens a file and returns it
 
         Parameters:
         file_path (str): A string path to the file
@@ -23,7 +23,7 @@ class DataParser:
     @staticmethod
     def replace_nan_values(data):
         '''
-        Replace NaN values of a Dataset
+        Replaces NaN values of a Dataset
 
         Parameters:
         data (pd.Series): A dataset with NaN values

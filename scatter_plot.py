@@ -1,15 +1,24 @@
+import sys
 import matplotlib.pyplot as plt
 from toolkit import DataParser
 
 class ScatterPlot:
-    def __init__(self):
-        self.data = []
-        self.num_data = []
-    
-    def similar_features(self, dataset):
+    '''Creates a scatter plot of the two features with the highest correlation.'''
+
+    def __init__(self, dataset):
+        '''
+        Inits the class, open and clean the dataset and calls similar_features function.
+        Parameters:
+        dataset (str): Path to dataset
+        '''
         self.data = DataParser.open_file(dataset)
         self.num_data, _ = DataParser.clean_data(self.data)
-
+        self.similar_features()
+    
+    def similar_features(self):
+        '''
+        Calculates the correlation of all features. Finds the highest correlations and show it in a scatter plot.
+        '''
         corr_data = self.num_data.corr()
         max_corr = 0
         feature_corr = []
@@ -35,8 +44,11 @@ class ScatterPlot:
         plt.show()
 
 def main():
-    sp = ScatterPlot()
-    sp.similar_features("datasets/dataset_train.csv")
+    if (len(sys.argv) != 1):
+        print("Usage: python3 ./scatter_plot.py")
+        sys.exit(1)
+
+    sp = ScatterPlot("datasets/dataset_train.csv")
 
 if __name__ == "__main__":
     main()
