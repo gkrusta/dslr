@@ -3,12 +3,12 @@ import pandas as pd
 import numpy as np
 from toolkit import DataParser
 
-class Logisticregression():
+class LogisticRegression():
     def __init__(self):
         self.data = None
         self.lr = 0.001
         self.iterations = 1000
-        self.weights = 0
+        self.weights = []
         self.bias = 0
 
 
@@ -42,7 +42,7 @@ def main():
         print("Usage: python3 ./logreg_train.py dataset_name")
         sys.exit(1)
 
-    lr = Logisticregression()
+    lr = LogisticRegression()
     lr.parse_arguments(sys.argv[1])
 
 
