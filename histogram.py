@@ -8,6 +8,11 @@ class Histogram():
 
 
     def histogram(self, infile, house_col = "Hogwarts House"):
+        """
+        Generates histograms to visualize the distribution of numerical features for each Hogwarts house.
+        This function reads the dataset, preprocesses the data, and creates histograms 
+        for each numerical feature.
+        """
         all_data = DataParser.open_file(infile)
         columns_to_drop = ['First Name', 'Last Name', 'Birthday', 'Best Hand']
         data = all_data.drop(columns=columns_to_drop, errors='ignore')
