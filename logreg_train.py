@@ -26,7 +26,7 @@ class LogisticRegression():
         columns_to_drop = ['First Name', 'Last Name', 'Birthday', 'Best Hand', 'Defense Against the Dark Arts']
         data = all_data.drop(columns=columns_to_drop)
         self.data =  DataParser.replace_nan_values(data)
-        houses = ['Gryffindor', 'Hufflepuff', 'Ravenclaw', 'Slytherin']
+        houses = all_data["Hogwarts House"].unique()
         labels = {}
         for house in houses:
             labels[house] = (self.data['Hogwarts House'] == house).astype(int)
@@ -34,7 +34,16 @@ class LogisticRegression():
         for house, label in labels.items():
             self.data[f'{house}_label'] = label
 
-        print(self.data.head())
+
+    def standardize(self):
+        for col in self.data.columns:
+            if isinstance(self.data[col].iloc[0], int) or isinstance(self.data[col].iloc[0], float):
+                mean =  np.sum(self.data[col]) / len(self.data[col]) 
+                value = 0.0
+                for num in self.data[col]:
+                    value += (num - mean) ** 2
+                std = (value / len(self.data[col])) ** 0.5
+                self.data[col] = (self.data[col] - mean) / std
 
 
 def main():
@@ -44,6 +53,7 @@ def main():
 
     lr = LogisticRegression()
     lr.parse_arguments(sys.argv[1])
+    lr.standardize()
 
 
 if __name__ == "__main__":
