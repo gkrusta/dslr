@@ -7,8 +7,8 @@ from toolkit import DataParser
 class LogisticRegression():
     def __init__(self):
         self.data = None
-        self.lr = 0.001
-        self.iterations = 1000
+        self.lr = 0.1
+        self.iterations = 2000
         self.weights = {}
         self.houses = []
         self.mean = {}
@@ -84,6 +84,7 @@ class LogisticRegression():
             bias_final = bias - sum(theta[i+1] * self.mean[col] / self.std[col] for i, col in enumerate(data_wo_label))
             final_weights[house] = {"bias": bias_final, "weights": weights}
         return final_weights
+
 
     def data_file(self):
         try:
