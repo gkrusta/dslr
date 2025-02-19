@@ -10,6 +10,7 @@ class LogisticRegression():
         self.lr = 0.1
         self.iterations = 2000
         self.weights = {}
+        self.bias = {}
         self.houses = []
         self.mean = {}
         self.std = {}
@@ -26,9 +27,15 @@ class LogisticRegression():
         return cost
 
 
-    def gradient(self, x, y_label, y_predicted):
+    def weights_gradient(self, x, y_label, y_predicted):
         m = len(y_label)
         grad = 1 / m * np.dot(x.T, (y_predicted - y_label)) #multiplicación de matrices
+        return grad
+    
+
+    def bias_gradient(self, y_label, y_predicted):
+        m = len(y_label)
+        grad = 1 / m * np.sum(y_predicted - y_label)
         return grad
 
 
@@ -42,6 +49,7 @@ class LogisticRegression():
         data = all_data.drop(columns=columns_to_drop)
         self.data =  DataParser.replace_nan_values(data)
         self.weights = {house: [] for house in self.houses}
+        self.bias = {house: [] for house in self.houses}
 
         for house, label in labels.items():
             self.data[f'{house}_label'] = label
@@ -60,16 +68,19 @@ class LogisticRegression():
 
     def calculate_weights(self):
         data_wo_label = self.data.iloc[:,:-4]
-        X = np.insert(data_wo_label.values, 0, 1, axis=1)
         for house in self.houses:
-            theta = np.zeros(X.shape[1], dtype=float)
+            weight = np.zeros(data_wo_label.shape[1], dtype=float)
+            bias = 0
             for _ in range(self.iterations):
-                z = X.dot(theta)
+                z = data_wo_label.dot(weight) + bias
                 h = self.sigmoid(z)
                 cost = self.compute_cost(self.data[f"{house}_label"], h)
-                grad = self.gradient(X, self.data[f"{house}_label"], h)
-                theta = theta - self.lr * grad
-            self.weights[house] = theta.tolist()
+                w_grad = self.weights_gradient(data_wo_label, self.data[f"{house}_label"], h)
+                b_grad = self.bias_gradient(self.data[f"{house}_label"], h)
+                weight = weight - self.lr * w_grad
+                bias = bias - self.lr * b_grad
+            self.weights[house] = weight.tolist()
+            self.bias[house] = bias
     
 
     def destandarize(self):
@@ -77,11 +88,11 @@ class LogisticRegression():
         final_weights = {}
         for house in self.houses:
             theta = np.array(self.weights[house])
-            bias = theta[0]
+            bias = self.bias[house]
             weights = []
             for i, col in enumerate(data_wo_label):
-                weights.append(float(theta[i+1] / self.std[col]))
-            bias_final = bias - sum(theta[i+1] * self.mean[col] / self.std[col] for i, col in enumerate(data_wo_label))
+                weights.append(float(theta[i] / self.std[col]))
+                bias_final = bias - sum([theta[i] * self.mean[col] / self.std[col]])
             final_weights[house] = {"bias": bias_final, "weights": weights}
         return final_weights
 
