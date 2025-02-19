@@ -72,7 +72,7 @@ class LogisticRegression():
                 # error
                 # partial derivative for each weight and bias 
                 for i in range(self.feature_count):
-                    self.weights[house][i] = 
+                    self.weights[house][i] =  
                 self.bias[house] = 
 
     def save_weights(self, filename="weights.json"):
