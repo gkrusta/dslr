@@ -1,6 +1,5 @@
 import sys
 import json
-import pandas as pd
 import numpy as np
 from toolkit import DataParser
 
@@ -14,10 +13,6 @@ class LogisticRegression():
         self.houses = []
         self.mean = {}
         self.std = {}
-
-
-    def sigmoid(self, x):
-        return 1 / (1 + np.exp(-x))
 
 
     def compute_cost(self, y_label, y_predicted):
@@ -73,7 +68,7 @@ class LogisticRegression():
             bias = 0
             for _ in range(self.iterations):
                 z = data_wo_label.dot(weight) + bias
-                h = self.sigmoid(z)
+                h = DataParser.sigmoid(z)
                 cost = self.compute_cost(self.data[f"{house}_label"], h)
                 w_grad = self.weights_gradient(data_wo_label, self.data[f"{house}_label"], h)
                 b_grad = self.bias_gradient(self.data[f"{house}_label"], h)
