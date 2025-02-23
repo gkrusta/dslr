@@ -40,7 +40,7 @@ class LogisticRegression():
         labels = {}
         for house in self.houses:
             labels[house] = (all_data['Hogwarts House'] == house).astype(int)
-        columns_to_drop = ['First Name', 'Last Name', 'Birthday', 'Best Hand', 'Defense Against the Dark Arts', 'Hogwarts House']
+         =columns_to_drop ['First Name', 'Last Name', 'Birthday', 'Best Hand', 'Defense Against the Dark Arts', 'Hogwarts House']
         data = all_data.drop(columns=columns_to_drop)
         self.data =  DataParser.replace_nan_values(data)
         self.weights = {house: [] for house in self.houses}
