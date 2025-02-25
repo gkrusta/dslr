@@ -117,6 +117,7 @@ def train(train_path, weights_path=optional, config_path=None, visualize=False):
     lr.calculate_weights()
     lr.data_file()
 
+
 def main():
     if (len(sys.argv) < 2):
         print("Usage: python3 ./logreg_train.py dataset_name")

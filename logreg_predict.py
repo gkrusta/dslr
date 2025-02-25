@@ -1,6 +1,7 @@
 import sys
 import numpy as np
 import pandas as pd
+from pyrsistent import optional
 from toolkit import DataParser
 import json
 
@@ -42,17 +43,18 @@ class Prediction():
         with open(weights, "r") as file:
             self.weights = json.load(file)
 
-def predict(test_path, weights_path, output_folder, config_path):
+
+def predict(test_path, weights_path, output_folder=optional, config_path=optional):
     pr = Prediction()
     pr.parse_arguments(test_path, weights_path,)
     pr.predict_house()
+
 
 def main():
     if (len(sys.argv) < 3): 
         print("Usage: python3 ./logreg_predict.py dataset_name weights.json")
         sys.exit(1)
     predict(sys.argv[1], sys.argv[2])
-
 
 
 if __name__ == "__main__":
