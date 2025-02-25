@@ -84,6 +84,24 @@ class LogisticRegression():
             self.bias[house] = bias
     
 
+    def mini_batch_weights(self):
+        batch = 32
+        data_wo_label = self.data.iloc[:,:-4]
+        for house in self.houses:
+            weight = np.zeros(data_wo_label.shape[1], dtype=float)
+            bias = 0
+            for _ in range(self.iterations):
+                z = data_wo_label.dot(weight) + bias
+                h = self.sigmoid(z)
+                cost = self.compute_cost(self.data[f"{house}_label"], h)
+                w_grad = self.weights_gradient(data_wo_label, self.data[f"{house}_label"], h)
+                b_grad = self.bias_gradient(self.data[f"{house}_label"], h)
+                weight = weight - self.lr * w_grad
+                bias = bias - self.lr * b_grad
+            self.weights[house] = weight.tolist()
+            self.bias[house] = bias
+
+
     def destandarize(self):
         data_wo_label = self.data.iloc[:,:-4]
         final_weights = {}
