@@ -2,6 +2,7 @@ import sys
 import json
 import pandas as pd
 import numpy as np
+from pyrsistent import optional
 from toolkit import DataParser
 
 class LogisticRegression():
@@ -40,7 +41,7 @@ class LogisticRegression():
 
 
     def parse_arguments(self, dataset):
-        all_data = DataParser.open_file(dataset)
+        all_data = DataParser.open_file(dataset)        
         self.houses = all_data["Hogwarts House"].unique().tolist()
         labels = {}
         for house in self.houses:
@@ -90,9 +91,11 @@ class LogisticRegression():
             theta = np.array(self.weights[house])
             bias = self.bias[house]
             weights = []
+            bias_final = 0
             for i, col in enumerate(data_wo_label):
                 weights.append(float(theta[i] / self.std[col]))
-                bias_final = bias - sum([theta[i] * self.mean[col] / self.std[col]])
+                bias_final += theta[i] * self.mean[col] / self.std[col]
+            bias_final = bias - bias_final
             final_weights[house] = {"bias": bias_final, "weights": weights}
         return final_weights
 
@@ -107,16 +110,18 @@ class LogisticRegression():
             sys.exit(1)
         
 
+def train(train_path, weights_path=optional, config_path=None, visualize=False):
+    lr = LogisticRegression()
+    lr.parse_arguments(train_path)
+    lr.standardize()
+    lr.calculate_weights()
+    lr.data_file()
+
 def main():
     if (len(sys.argv) < 2):
         print("Usage: python3 ./logreg_train.py dataset_name")
         sys.exit(1)
-
-    lr = LogisticRegression()
-    lr.parse_arguments(sys.argv[1])
-    lr.standardize()
-    lr.calculate_weights()
-    lr.data_file()
+    train(sys.argv[1])
 
 
 if __name__ == "__main__":

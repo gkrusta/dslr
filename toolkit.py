@@ -18,7 +18,7 @@ class DataParser:
             data = pd.read_csv(file_path, index_col=index_col)
             return data
         except Exception as e:
-            print()
+            print(e)
             exit(1)
 
 

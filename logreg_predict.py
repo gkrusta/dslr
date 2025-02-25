@@ -42,14 +42,17 @@ class Prediction():
         with open(weights, "r") as file:
             self.weights = json.load(file)
 
+def predict(test_path, weights_path, output_folder, config_path):
+    pr = Prediction()
+    pr.parse_arguments(test_path, weights_path,)
+    pr.predict_house()
 
 def main():
     if (len(sys.argv) < 3): 
         print("Usage: python3 ./logreg_predict.py dataset_name weights.json")
         sys.exit(1)
-    pr = Prediction()
-    pr.parse_arguments(sys.argv[1], sys.argv[2])
-    pr.predict_house()
+    predict(sys.argv[1], sys.argv[2])
+
 
 
 if __name__ == "__main__":
