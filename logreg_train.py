@@ -9,7 +9,7 @@ class LogisticRegression():
     def __init__(self):
         self.data = None
         self.lr = 0.1
-        self.iterations = 2000
+        self.iterations = 1000
         self.weights = {}
         self.bias = {}
         self.houses = []
@@ -85,19 +85,23 @@ class LogisticRegression():
     
 
     def mini_batch_weights(self):
-        batch = 32
+        batch = 128
+        m = len(self.data)
         data_wo_label = self.data.iloc[:,:-4]
         for house in self.houses:
             weight = np.zeros(data_wo_label.shape[1], dtype=float)
             bias = 0
             for _ in range(self.iterations):
-                z = data_wo_label.dot(weight) + bias
-                h = self.sigmoid(z)
-                cost = self.compute_cost(self.data[f"{house}_label"], h)
-                w_grad = self.weights_gradient(data_wo_label, self.data[f"{house}_label"], h)
-                b_grad = self.bias_gradient(self.data[f"{house}_label"], h)
-                weight = weight - self.lr * w_grad
-                bias = bias - self.lr * b_grad
+                for i in range(0, m, batch):
+                    X = data_wo_label[i:i + batch]
+                    X_data = self.data[i:i + batch]
+                    z = X.dot(weight) + bias
+                    h = self.sigmoid(z)
+                    cost = self.compute_cost(X_data[f"{house}_label"], h)
+                    w_grad = self.weights_gradient(X, X_data[f"{house}_label"], h)
+                    b_grad = self.bias_gradient(X_data[f"{house}_label"], h)
+                    weight = weight - self.lr * w_grad
+                    bias = bias - self.lr * b_grad
             self.weights[house] = weight.tolist()
             self.bias[house] = bias
 
@@ -132,7 +136,7 @@ def train(train_path, weights_path=optional, config_path=None, visualize=False):
     lr = LogisticRegression()
     lr.parse_arguments(train_path)
     lr.standardize()
-    lr.calculate_weights()
+    lr.mini_batch_weights()
     lr.data_file()
 
 
