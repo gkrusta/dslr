@@ -9,7 +9,7 @@ class LogisticRegression():
     def __init__(self):
         self.data = None
         self.lr = 0.1
-        self.iterations = 2000
+        self.iterations = 1000
         self.weights = {}
         self.bias = {}
         self.houses = []
@@ -81,8 +81,30 @@ class LogisticRegression():
                 weight = weight - self.lr * w_grad
                 bias = bias - self.lr * b_grad
             self.weights[house] = weight.tolist()
-            self.bias[house] = bias
+            self.bias[house] = bias 
     
+
+    def calculate_sgd(self):
+        data_wo_label = self.data.iloc[:,:-4]
+        for house in self.houses:
+            weight = np.zeros(data_wo_label.shape[1], dtype=float)
+            bias = 0
+            for i in range(self.iterations):
+                shuffled_data = self.data.sample(frac=1).reset_index(drop=True)
+                #for i in range(len(shuffled_data)):
+                    
+                feature_row = shuffled_data.iloc[i, :-4].values
+                y_label = shuffled_data[f"{house}_label"].iloc[i]
+                z = np.dot(feature_row, weight) + bias
+                h = self.sigmoid(z)
+
+                w_grad = (h - y_label) * feature_row
+                b_grad = h - y_label
+                weight = weight - self.lr * w_grad
+                bias = bias - self.lr * b_grad
+            self.weights[house] = weight.tolist()
+            self.bias[house] = bias 
+
 
     def destandarize(self):
         data_wo_label = self.data.iloc[:,:-4]
@@ -110,11 +132,14 @@ class LogisticRegression():
             sys.exit(1)
         
 
-def train(train_path, weights_path=optional, config_path=None, visualize=False):
+def train(train_path, weights_path=optional, config_path=None, visualize=False, flag='-b'):
     lr = LogisticRegression()
     lr.parse_arguments(train_path)
     lr.standardize()
-    lr.calculate_weights()
+    if flag=='-b':
+        lr.calculate_weights()
+    elif flag=='-s':
+        lr.calculate_sgd()
     lr.data_file()
 
 
@@ -122,7 +147,10 @@ def main():
     if (len(sys.argv) < 2):
         print("Usage: python3 ./logreg_train.py dataset_name")
         sys.exit(1)
-    train(sys.argv[1])
+    flag = '-b'
+    if (len(sys.argv) > 2 and (sys.argv[2] == '-s' or sys.argv[2] == '-m')):
+        flag = sys.argv[2]
+    train(sys.argv[1], flag)
 
 
 if __name__ == "__main__":

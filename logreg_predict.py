@@ -20,12 +20,13 @@ class Prediction():
             b = params['bias']
             probabilities[house] = DataParser.sigmoid(np.dot(X, W) + b)
         formated_probs = {house: f"{prob:.12f}" for house, prob in probabilities.items()}
-        print(formated_probs)
+        #print(formated_probs)
         return max(probabilities, key=probabilities.get)
 
 
     def predict_house(self):
         predictions = []
+
         for index, row in self.data.iterrows():
             X = np.array(row)
             predicted_house = Prediction.get_probability(self, X)
