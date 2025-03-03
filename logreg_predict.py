@@ -19,7 +19,7 @@ class Prediction():
             W = np.array(params['weights'])
             b = params['bias']
             probabilities[house] = DataParser.sigmoid(np.dot(X, W) + b)
-        formated_probs = {house: f"{prob:.12f}" for house, prob in probabilities.items()}
+        #formated_probs = {house: f"{prob:.12f}" for house, prob in probabilities.items()}
         #print(formated_probs)
         return max(probabilities, key=probabilities.get)
 

@@ -90,9 +90,7 @@ class LogisticRegression():
             weight = np.zeros(data_wo_label.shape[1], dtype=float)
             bias = 0
             for i in range(self.iterations):
-                shuffled_data = self.data.sample(frac=1).reset_index(drop=True)
-                #for i in range(len(shuffled_data)):
-                    
+                shuffled_data = self.data.sample(frac=1).reset_index(drop=True)                    
                 feature_row = shuffled_data.iloc[i, :-4].values
                 y_label = shuffled_data[f"{house}_label"].iloc[i]
                 z = np.dot(feature_row, weight) + bias
@@ -136,21 +134,24 @@ def train(train_path, weights_path=optional, config_path=None, visualize=False, 
     lr = LogisticRegression()
     lr.parse_arguments(train_path)
     lr.standardize()
-    if flag=='-b':
+    if flag == '-b':
         lr.calculate_weights()
-    elif flag=='-s':
+    elif flag == '-s':
         lr.calculate_sgd()
+    # elif flag == '-m':
+    #     lr.mini_batch_weights()
     lr.data_file()
 
 
 def main():
     if (len(sys.argv) < 2):
-        print("Usage: python3 ./logreg_train.py dataset_name")
+        print("Usage: python3 ./logreg_train.py dataset_name flag")
+        print("Falg options:\n-b or leave empty: Batch GD\n-s: stochastic (default)\n-m: mini-batch GD")
         sys.exit(1)
     flag = '-b'
     if (len(sys.argv) > 2 and (sys.argv[2] == '-s' or sys.argv[2] == '-m')):
         flag = sys.argv[2]
-    train(sys.argv[1], flag)
+    train(train_path=sys.argv[1], flag=flag)
 
 
 if __name__ == "__main__":
