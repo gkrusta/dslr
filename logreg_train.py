@@ -17,10 +17,6 @@ class LogisticRegression():
         self.std = {}
 
 
-    def sigmoid(self, x):
-        return 1 / (1 + np.exp(-x))
-
-
     def compute_cost(self, y_label, y_predicted):
         epsilon = 1e-9
         m = len(y_label)
@@ -30,7 +26,7 @@ class LogisticRegression():
 
     def weights_gradient(self, x, y_label, y_predicted):
         m = len(y_label)
-        grad = 1 / m * np.dot(x.T, (y_predicted - y_label)) #multiplicación de matrices
+        grad = 1 / m * np.dot(x.T, (y_predicted - y_label))
         return grad
     
 
@@ -74,7 +70,7 @@ class LogisticRegression():
             bias = 0
             for _ in range(self.iterations):
                 z = data_wo_label.dot(weight) + bias
-                h = self.sigmoid(z)
+                h = DataParser.sigmoid(z)
                 cost = self.compute_cost(self.data[f"{house}_label"], h)
                 w_grad = self.weights_gradient(data_wo_label, self.data[f"{house}_label"], h)
                 b_grad = self.bias_gradient(self.data[f"{house}_label"], h)
@@ -85,8 +81,10 @@ class LogisticRegression():
     
 
     def mini_batch_weights(self):
-        batch = 128
+        batch = 256
         m = len(self.data)
+        if m < batch:
+            batch = m
         data_wo_label = self.data.iloc[:,:-4]
         for house in self.houses:
             weight = np.zeros(data_wo_label.shape[1], dtype=float)
@@ -96,7 +94,7 @@ class LogisticRegression():
                     X = data_wo_label[i:i + batch]
                     X_data = self.data[i:i + batch]
                     z = X.dot(weight) + bias
-                    h = self.sigmoid(z)
+                    h = DataParser.sigmoid(z)
                     cost = self.compute_cost(X_data[f"{house}_label"], h)
                     w_grad = self.weights_gradient(X, X_data[f"{house}_label"], h)
                     b_grad = self.bias_gradient(X_data[f"{house}_label"], h)
@@ -116,7 +114,7 @@ class LogisticRegression():
                 feature_row = shuffled_data.iloc[i, :-4].values
                 y_label = shuffled_data[f"{house}_label"].iloc[i]
                 z = np.dot(feature_row, weight) + bias
-                h = self.sigmoid(z)
+                h = DataParser.sigmoid(z)
 
                 w_grad = (h - y_label) * feature_row
                 b_grad = h - y_label
@@ -160,15 +158,15 @@ def train(train_path, weights_path=optional, config_path=None, visualize=False, 
         lr.calculate_weights()
     elif flag == '-s':
         lr.calculate_sgd()
-    # elif flag == '-m':
-    #     lr.mini_batch_weights()
+    elif flag == '-m':
+        lr.mini_batch_weights()
     lr.data_file()
 
 
 def main():
     if (len(sys.argv) < 2):
         print("Usage: python3 ./logreg_train.py dataset_name flag")
-        print("Falg options:\n-b or leave empty: Batch GD\n-s: stochastic (default)\n-m: mini-batch GD")
+        print("Flag options:\n-b or leave empty: Batch GD (default)\n-s: stochastic\n-m: mini-batch GD")
         sys.exit(1)
     flag = '-b'
     if (len(sys.argv) > 2 and (sys.argv[2] == '-s' or sys.argv[2] == '-m')):
