@@ -6,7 +6,17 @@ from pyrsistent import optional
 from toolkit import DataParser
 
 class LogisticRegression():
+    """
+    Implements logistic regression with support for batch, mini-batch, and stochastic gradient descent.
+
+    This class allows training a logistic regression model on a dataset using different optimization 
+    techniques and provides methods for standardizing data, computing gradients, and exporting model weights.
+    """
+
     def __init__(self):
+        """
+        Inits the class and the variables.
+        """
         self.data = None
         self.lr = 0.1
         self.iterations = 1000
@@ -18,18 +28,42 @@ class LogisticRegression():
 
 
     def weights_gradient(self, x, y_label, y_predicted):
+        """
+        Computes the gradient of the weights for logistic regression.
+        
+        Parameters:
+        x (pd.Series): Dataset
+        y_label (pd.Series): Column with the truth label (0 or 1) for each example.
+        y_predicted (pd.Series): Column with the predicted probabilities for each example.
+        """
         m = len(y_label)
         grad = 1 / m * np.dot(x.T, (y_predicted - y_label))
         return grad
     
 
     def bias_gradient(self, y_label, y_predicted):
+        """
+        Computes the gradient of the bias term in logistic regression.
+        
+        Parameters:
+        y_label (pd.Series): Column with the truth label (0 or 1) for each example.
+        y_predicted (pd.Series): Column with the predicted probabilities for each example.
+        """
         m = len(y_label)
         grad = 1 / m * np.sum(y_predicted - y_label)
         return grad
 
 
     def parse_arguments(self, dataset):
+        """
+        Loads the dataset, cleans the data, and creates binary labels for each house.
+
+        This method reads the dataset, removes unnecessary columns, replaces NaN values, and generates a 
+        label column for each Hogwarts house.
+
+        Parameters:
+        dataset (str): Path to dataset
+        """
         all_data = DataParser.open_file(dataset)        
         self.houses = all_data["Hogwarts House"].unique().tolist()
         labels = {}
@@ -46,6 +80,9 @@ class LogisticRegression():
 
 
     def standardize(self):
+        """
+        Standardizes the numerical features of the dataset using z-score normalization.
+        """
         for col in self.data.columns:
             if isinstance(self.data[col].iloc[0], int) or isinstance(self.data[col].iloc[0], float):
                 self.mean[col] =  np.sum(self.data[col]) / len(self.data[col]) 
@@ -57,6 +94,9 @@ class LogisticRegression():
 
 
     def calculate_weights(self):
+        """
+        Trains the logistic regression model using Batch Gradient Descent.
+        """
         data_wo_label = self.data.iloc[:,:-4]
         for house in self.houses:
             weight = np.zeros(data_wo_label.shape[1], dtype=float)
@@ -73,6 +113,9 @@ class LogisticRegression():
     
 
     def mini_batch_weights(self):
+        """
+        Trains the logistic regression model using Mini-batch Gradient Descent.
+        """
         batch = 256
         m = len(self.data)
         if m < batch:
@@ -119,6 +162,9 @@ class LogisticRegression():
 
 
     def destandarize(self):
+        """
+        Converts the learned weights and bias from standardized form back to original scale.
+        """
         data_wo_label = self.data.iloc[:,:-4]
         final_weights = {}
         for house in self.houses:
@@ -135,6 +181,9 @@ class LogisticRegression():
 
 
     def data_file(self):
+        """
+        Exports the trained model's weights and bias to a JSON file.
+        """
         try:
             final_weights = self.destandarize()
             with open("weights.json", "w") as file:
