@@ -7,7 +7,16 @@ import json
 
 
 class Prediction():
+    """
+    Handles the prediction of Hogwarts houses using a trained logistic regression model.
+
+    This class loads a dataset and a set of trained weights, applies the logistic regression
+    model to predict the most likely house for each example, and saves the results to a CSV file.
+    """
     def __init__(self):
+        """
+        Inits the class and the variables.
+        """
         self.data = None
         self.weights = None
 
@@ -19,8 +28,6 @@ class Prediction():
             W = np.array(params['weights'])
             b = params['bias']
             probabilities[house] = DataParser.sigmoid(np.dot(X, W) + b)
-        #formated_probs = {house: f"{prob:.12f}" for house, prob in probabilities.items()}
-        #print(formated_probs)
         return max(probabilities, key=probabilities.get)
 
 
@@ -30,7 +37,6 @@ class Prediction():
         for index, row in self.data.iterrows():
             X = np.array(row)
             predicted_house = Prediction.get_probability(self, X)
-            #print("predicted_house ", predicted_house)
             predictions.append([index, predicted_house])
         df = pd.DataFrame(predictions, columns=['index','Hogwarts House'])
         df.to_csv('houses.csv', index=False)
