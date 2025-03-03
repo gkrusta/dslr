@@ -17,13 +17,6 @@ class LogisticRegression():
         self.std = {}
 
 
-    def compute_cost(self, y_label, y_predicted):
-        epsilon = 1e-9
-        m = len(y_label)
-        cost = 1 / m * np.sum(y_label * np.log(y_predicted + epsilon) + (1 - y_label) * np.log(1 - y_predicted + epsilon))
-        return cost
-
-
     def weights_gradient(self, x, y_label, y_predicted):
         m = len(y_label)
         grad = 1 / m * np.dot(x.T, (y_predicted - y_label))
@@ -71,7 +64,6 @@ class LogisticRegression():
             for _ in range(self.iterations):
                 z = data_wo_label.dot(weight) + bias
                 h = DataParser.sigmoid(z)
-                cost = self.compute_cost(self.data[f"{house}_label"], h)
                 w_grad = self.weights_gradient(data_wo_label, self.data[f"{house}_label"], h)
                 b_grad = self.bias_gradient(self.data[f"{house}_label"], h)
                 weight = weight - self.lr * w_grad
@@ -95,7 +87,6 @@ class LogisticRegression():
                     X_data = self.data[i:i + batch]
                     z = X.dot(weight) + bias
                     h = DataParser.sigmoid(z)
-                    cost = self.compute_cost(X_data[f"{house}_label"], h)
                     w_grad = self.weights_gradient(X, X_data[f"{house}_label"], h)
                     b_grad = self.bias_gradient(X_data[f"{house}_label"], h)
                     weight = weight - self.lr * w_grad
@@ -105,6 +96,9 @@ class LogisticRegression():
     
 
     def calculate_sgd(self):
+        """
+        Performs Stochastic Gradient Descent (SGD) to optimize logistic regression weights.
+        """
         data_wo_label = self.data.iloc[:,:-4]
         for house in self.houses:
             weight = np.zeros(data_wo_label.shape[1], dtype=float)
