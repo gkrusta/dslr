@@ -22,6 +22,10 @@ class Prediction():
 
 
     def get_probability(self, X):
+        """
+        Computes the probability of a sample belonging to each Hogwarts house using the sigmoid function 
+        and selects the house with the highest probability.
+        """
         probabilities = {}
 
         for house, params in self.weights.items():
@@ -32,6 +36,10 @@ class Prediction():
 
 
     def predict_house(self):
+        """
+        Predicts the Hogwarts house for each sample in the dataset using trained weights and saves 
+        the results to 'houses.csv'.
+        """
         predictions = []
 
         for index, row in self.data.iterrows():
@@ -43,6 +51,10 @@ class Prediction():
 
 
     def parse_arguments(self, dataset, weights):
+        """
+        Loads the dataset, removes unnecessary columns, replaces NaN values,
+        and loads pre-trained weights from a file.
+        """
         all_data = DataParser.open_file(dataset)
         columns_to_drop = ['First Name', 'Last Name', 'Birthday', 'Best Hand', 'Defense Against the Dark Arts', 'Hogwarts House']
         all_data = all_data.drop(columns=columns_to_drop, errors='ignore')
@@ -52,6 +64,9 @@ class Prediction():
 
 
 def predict(test_path, weights_path, output_folder=optional, config_path=optional):
+    """
+    Loads test data and trained weights, performs predictions, and saves the results.
+    """
     pr = Prediction()
     pr.parse_arguments(test_path, weights_path,)
     pr.predict_house()

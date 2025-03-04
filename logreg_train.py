@@ -194,6 +194,10 @@ class LogisticRegression():
         
 
 def train(train_path, weights_path=optional, config_path=None, visualize=False, flag='-b'):
+    """
+    Trains a logistic regression model using batch, stochastic, or mini-batch gradient descent,
+    then saves the weights.
+    """
     lr = LogisticRegression()
     lr.parse_arguments(train_path)
     lr.standardize()
