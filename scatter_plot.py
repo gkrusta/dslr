@@ -22,6 +22,7 @@ class ScatterPlot:
         corr_data = self.num_data.corr()
         max_corr = 0
         feature_corr = []
+        plt.figure(figsize=(16,12))
         for feature in self.num_data.columns:
             for feature_2 in self.num_data.columns:
                 if feature == feature_2:
@@ -36,7 +37,6 @@ class ScatterPlot:
         for house in classes:
             class_data = self.num_data[self.data["Hogwarts House"] == house]
             plt.scatter(class_data[feature_corr[0]], class_data[feature_corr[1]], label=house)
-
         plt.xlabel(feature_corr[0])
         plt.ylabel(feature_corr[1])
         plt.title("Similar Features")
@@ -48,7 +48,7 @@ def main():
         print("Usage: python3 ./scatter_plot.py")
         sys.exit(1)
 
-    sp = ScatterPlot("datasets/dataset_train.csv")
+    sp = ScatterPlot("data/dataset_train.csv")
 
 if __name__ == "__main__":
     main()

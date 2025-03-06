@@ -23,9 +23,7 @@ class PairPlot():
         data = data.rename(columns={'Defense Against the Dark Arts': 'DADA'})
         self.data =  DataParser.replace_nan_values(data)
         houses = ['Gryffindor', 'Hufflepuff', 'Ravenclaw', 'Slytherin']
-        #sns.pairplot(self.data, hue=house_col)
         num_features = self.data.select_dtypes(include=['int64', 'float64']).columns
-        print(num_features)
         fig, axs = plt.subplots(len(num_features), len(num_features), figsize=(30, 34))
         fig.suptitle("Pair plot", fontsize=16, fontweight="bold")
 
@@ -57,7 +55,7 @@ class PairPlot():
 
 def main():
     hg = PairPlot()
-    hg.pair_plot('datasets/dataset_train.csv')
+    hg.pair_plot('data/dataset_train.csv')
 
 
 if __name__ == "__main__":

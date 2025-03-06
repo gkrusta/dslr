@@ -20,7 +20,7 @@ class Histogram():
         houses = self.data[house_col].unique()        
         features = self.data.drop(columns=['Hogwarts House'] ).columns
         rows, cols = 3, 5
-        fig, axs = plt.subplots(rows, cols, figsize=(12,8))
+        fig, axs = plt.subplots(rows, cols, figsize=(16,12))
         fig.suptitle("Histogram", fontsize=16, fontweight="bold")
         axs = axs.flatten()
 
@@ -44,7 +44,7 @@ class Histogram():
 
 def main():
     hg = Histogram()
-    hg.histogram('datasets/dataset_train.csv')
+    hg.histogram('data/dataset_train.csv')
 
 
 if __name__ == "__main__":
