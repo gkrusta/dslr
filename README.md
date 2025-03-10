@@ -52,16 +52,33 @@ python3 logreg_predict.py datasets/dataset_test.csv weights.json
 python3 evaluate.py
 ```
 
+## 📊 Visualize the Data
+Explore the dataset using different visualizations:
+
+📌 **Histogram**: Shows the distribution of numerical features.
+```
+python3 histogram.py
+```
 <div align="center">
   <img src="images/histogram.png" alt="histogram">
 </div>
+<br />
 
+📌 **Scatter Plot**: Displays feature relationships across Hogwarts Houses.
+```
+python3 scatter_plot.py
+```
 <div align="center">
   <img src="images/scatter.png" alt="scatter plot">
-</div>
+</div> 
+<br />
 
+📌 **Pair Plot**: Helps identify patterns and separability between classes.
+```
+python3 pair_plot.py
+```
 <div align="center">
   <img src="images/pair.png" alt="pair plot">
 </div>
 
-### My Teammate => [Belen](https://github.com/vnaslund-19)
+### ✨ My Teammate => [Belen](https://github.com/belenarbizu)
